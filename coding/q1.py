@@ -1,4 +1,5 @@
 import requests
+import copy
 
 class Result:
     def __init__(self):
@@ -37,10 +38,9 @@ def parse_response(response):
         return "file is not a text file", True
     return response.text, False
 
-
 def process_line(line):
-    # remove the spaces
-    line.replace(" ", "")
+    # remove the spaces, convert all the letters to lowercase
+    line = line.replace(" ", "").lower()
     return line
 
 def main(url):
@@ -58,27 +58,37 @@ def main(url):
         i = 0
         # print("FLAG: check msg")
         # print(msg)
-        for line in msg.splitlines():
+        for lin in msg.splitlines():
+            line = copy.deepcopy(lin)
+            i += 1
+            # print("FLAG: check line Before")
+            # print(line)
+            line = process_line(line)
             # print("FLAG: check line")
             # print(line)
-            i += 1
+            # print(len(line))
             # process line
-            output1[i] = len(process_line(line))
-            if check_palindrome(line):
+            if line and check_palindrome(line):
+                # print("line {} is palindrome".format(i))
+                output1[i] = len(line)
                 atleastOnePalindrome = True
         if not atleastOnePalindrome:
             output1 = {0:0}
         output2 = 'file ok'
     
+    assert check_palindrome('do od')
+    # assert not check_palindrome('do od')
 
-    # print("CHEKING THE OUTPUT")
-    # print("OUTPUT1: " + str(output1))
-    # print("OUTPUT2: " + output2)
+    print("CHEKING THE OUTPUT")
+    print("OUTPUT1: " + str(output1))
+    print("OUTPUT2: " + output2)
 
 
 if __name__ == "__main__":
     url = 'https://mettl-arq.s3-ap-southeast-1.amazonaws.com/questions/iit-kanpur/cyber-security-hackathon/round1/problem1/defaulttestcase.txt'
     main(url)
+
+    # print(process_line("Do od"))
 
 
 # Test cases
