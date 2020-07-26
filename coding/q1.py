@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+import time
 
 
 def check_palindrome(strng):
@@ -17,10 +18,19 @@ def check_palindrome(strng):
         return False
 
 def probe_url(url):
-    return requests.get(url, allow_redirects=True)
+    i = 5
+    while i>0:
+        try:
+            r = requests.get(url, allow_redirects=True)
+            return r
+        except:
+            return None
+
+        time.sleep(0.5)
+
 
 def validate_response(response):
-    if response.status_code == 200:
+    if response and response.status_code == 200:
         return True
     return False
 
@@ -30,8 +40,6 @@ def check_if_there_is_response(response):
     return False
 
 def parse_response(response):
-    if not validate_response(response):
-        return "the URL is incorrect", True
     if not check_if_there_is_response(response):
         return "file is not a text file", True
     return response.text, False
@@ -53,28 +61,43 @@ def main(url):
     output2 = ''
     atleastOnePalindrome = False
     response = probe_url(url)
-    if check_text_file(response):
-        msg, err = parse_response(response)
-        if err:
-            output2 = msg
-            output1 = {0:0}
-        else:
-            # The validations are passed
-            # now check palindrome
-            i = 0
-            for line in msg.splitlines():
-                i += 1
-                line = process_line(line)
-                if line and check_palindrome(line):
-                    output1[i] = len(line)
-                    atleastOnePalindrome = True
-            if not atleastOnePalindrome:
-                output1 = {0:0}
-            output2 = 'file ok'
-    else:
+    # if response:
+    # check response
+    if not validate_response(response):
         output1 = {0:0}
-        output2 = "file is not a text file"
+        output2 = "the URL is incorrect"
+    else:
+        # We have response so URL is correct
+        # Check if it is text file
+        if check_text_file(response):
+            # It is a text/plain file
+            # Time to parse it
+            msg, err = parse_response(response)
+            if err:
+                output2 = msg
+                output1 = {0:0}
+            else:
+                # The validations are passed
+                # now check palindrome
+                i = 0
+                for line in msg.splitlines():
+                    i += 1
+                    line = process_line(line)
+                    if line and check_palindrome(line):
+                        output1[i] = len(line)
+                        atleastOnePalindrome = True
+                if not atleastOnePalindrome:
+                    output1 = {0:0}
+                output2 = 'file ok'
+        else:
+            output1 = {0:0}
+            output2 = "file is not a text file"
         # the url is not text file
+    # else:
+    #     # URL is wrong
+    #     output1 = {0:0}
+    #     output2 = "the URL is incorrect"
+    # "the URL is incorrect"
 
     print("CHEKING THE OUTPUT")
     print("OUTPUT1: " + str(output1))
@@ -83,6 +106,6 @@ def main(url):
 
 if __name__ == "__main__":
     url = 'https://mettl-arq.s3-ap-southeast-1.amazonaws.com/questions/iit-kanpur/cyber-security-hackathon/round1/problem1/defaulttestcase.txt'
+    # url = 'https://www.google.com'
     # url = 'https://sjmulder.nl/en/textonly.html'
-    url = 'https://www.google.com'
     main(url)
