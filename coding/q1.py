@@ -1,14 +1,19 @@
+# -*- coding: utf-8 -*-
 import requests
-import os
+
 
 def check_palindrome(strng):
+
     # reverse the string
     rev_str = reversed(strng)
 
     # check if the string is equal to its reverse
+    # list will preserve the order
     if list(strng) == list(rev_str):
+        # It is palindrome
         return True
     else:
+        # It is not palindrome
         return False
 
 def probe_url(url):
@@ -79,4 +84,5 @@ def main(url):
 if __name__ == "__main__":
     url = 'https://mettl-arq.s3-ap-southeast-1.amazonaws.com/questions/iit-kanpur/cyber-security-hackathon/round1/problem1/defaulttestcase.txt'
     # url = 'https://sjmulder.nl/en/textonly.html'
+    url = 'https://www.google.com'
     main(url)
