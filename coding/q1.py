@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
+"""IITK-Hackathon
+
+This i s one of the coding question in the Round 1 of the competition
+
+Github repo can be found at:
+    https://github.com/Pratham567/HclHackIITK
+"""
+
 import requests
 import time
 
 
 def check_palindrome(strng):
+    """ Check if the given string is a palindrome or not """
 
     # reverse the string
     rev_str = reversed(strng)
@@ -18,6 +27,11 @@ def check_palindrome(strng):
         return False
 
 def probe_url(url):
+    """ Probe url and retry 5 times, as there might be network congestion 
+    at some time
+    Return None, if there is no response or if there is any trceback
+    """
+
     i = 5
     while i>0:
         try:
@@ -30,27 +44,30 @@ def probe_url(url):
 
 
 def validate_response(response):
+    """ Check if the URL was probe successfully """
     if response and response.status_code == 200:
         return True
     return False
 
 def check_if_there_is_response(response):
+    """ Check if there is response.text ot not """
     if response.text:
         return True
     return False
 
 def parse_response(response):
+    """ Return the response in ASCII format """
     if not check_if_there_is_response(response):
         return "file is not a text file", True
     return response.text, False
 
 def process_line(line):
-    # remove the spaces, convert all the letters to lowercase
+    """ remove the spaces, convert all the letters to lowercase """
     line = line.replace(" ", "").lower()
     return line
 
 def check_text_file(response):
-    # check if the response received is of type text/plain
+    """ check if the response received is of type text/plain """
 
     if response.headers.get('content-type') == 'text/plain':
         return True
@@ -79,6 +96,8 @@ def main(url):
             else:
                 # The validations are passed
                 # now check palindrome
+                # before that, we need to split the data into lines
+                # and then clean the data, ie. remove all white spaces
                 i = 0
                 for line in msg.splitlines():
                     i += 1
@@ -90,14 +109,9 @@ def main(url):
                     output1 = {0:0}
                 output2 = 'file ok'
         else:
+            # the url is not text file
             output1 = {0:0}
             output2 = "file is not a text file"
-        # the url is not text file
-    # else:
-    #     # URL is wrong
-    #     output1 = {0:0}
-    #     output2 = "the URL is incorrect"
-    # "the URL is incorrect"
 
     print("CHEKING THE OUTPUT")
     print("OUTPUT1: " + str(output1))
