@@ -69,6 +69,8 @@ def process_line(line):
 def check_text_file(response):
     """ check if the response received is of type text/plain """
 
+    print("FLAG:::::")
+    print(response.headers.get('content-type'))
     if response.headers.get('content-type') == 'text/plain':
         return True
     return False
@@ -119,7 +121,11 @@ def main(url):
 
 
 if __name__ == "__main__":
-    url = 'https://mettl-arq.s3-ap-southeast-1.amazonaws.com/questions/iit-kanpur/cyber-security-hackathon/round1/problem1/defaulttestcase.txt'
-    # url = 'https://www.google.com'
+    # url = 'https://mettl-arq.s3-ap-southeast-1.amazonaws.com/questions/iit-kanpur/cyber-security-hackathon/round1/problem1/defaulttestcase.txt'
+    url = 'https://mettl-arq.s3-ap-southeast-1.amazonaws.com/questions/iit-kanpur/cyber-security-hackathon/round1/problem1/set2/testcase2.txt'
+    url = 'https://mettl-arq.s3-ap-southeast-1.amazonaws.com/questions/iit-kanpur/cyber-security-hackathon/round1/problem1/set2/testcase4.txt'
     # url = 'https://sjmulder.nl/en/textonly.html'
+    # url = 'https://www.google.com'
+    url = 'http://google'
     main(url)
+
